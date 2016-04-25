@@ -7,19 +7,21 @@ $(".page-header").append("<div class=\"student-search\">  <input placeholder=\"S
 $(".page").append("<div class=\"pagination\"><ul><li><a class=\"active\" href=\"#\">1</a></li><li><a href=\"#\">2</a></li><li><a href=\"#\">3</a></li><li><a href=\"#\">4</a></li><li><a href=\"#\">5</a></li></ul></div>");
 
 //Hide all but the first 10 students when the page loads.
-$(".student-list").hide();
+$(".student-item").hide();
+$(".student-item").slice(0,10).show();
 
 //When a user clicks on “2” in the pagination, students 11 through 20 are shown. When a user clicks “3”, students 21 through 30 are shown. And so on. When “6” is clicked 51 through 55 should be shown.
-
-//When click on page number which is not active
 $( "a" ).click(function(){
-  //Remove students not in that page number
-
   //Switch "active" class from previous page to new page
   $( "a" ).removeClass("active");
   $( this ).addClass("active");
+  //Detect list of students based on selected page
+  var x = $(".active").text();
+  var start = x * 10 - 10; //where detected list starts
+  var end = x * 10;// where detected list ends
+  $(".student-item").hide(); //remove all first
+  $(".student-item").slice(start,end).show(); // and show only students in detected list
 });
-
 //Using progressive enhancement, add the student search markup as presented in the filters-example.html file to the index.html file.
 //1 Add Search button and Search field
 
