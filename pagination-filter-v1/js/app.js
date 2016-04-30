@@ -9,25 +9,25 @@ function pageLinkCreate(pageNum){
   pageLink += "</ul></div>";
   $(".page").append(pageLink);//Add page links to index.html
 };
-//Function loading list based on active page
-function activePage(list){
+//Function loading currentList based on active page
+function refreshPage(currentList){
   var x = $(".active").text();
-  var start = x * 3 - 3; //where detected list starts
-  var end = x * 3;// where detected list ends
+  var start = x * 3 - 3; //where detected currentList starts
+  var end = x * 3;// where detected currentList ends
   $(".student-item").hide();//hide all first
-  $(list).slice(start,end).show();//display 10
+  $(currentList).slice(start,end).show();//display 10
 };
-//Function when click on each page-header
-function pageClick(list){
+//Function when click on each page
+function pageClick(currentList){
   $( "a" ).click(function(){
-    $( "a" ).removeClass("active");
+    $( "a" ).removeClass("active");//switch active class for CSS update
     $( this ).addClass("active");
-    activePage(list);
+    refreshPage(currentList);//refresh the page to current currentList
   });
 }
 //Add Search button and input field
 $(".page-header").append("<div class=\"student-search\">  <input placeholder=\"Search for students...\">  <button>Search</button></div>");
-//Create an array of object includes firstName, lastName, and e-mail
+//Create an array of object includes firstName, lastName, and e-mail for searching
 var array=[];
 $(".student-details").each(function(){
   array.push({
@@ -40,7 +40,7 @@ $(".student-details").each(function(){
 //Default display
 studentPerPage = Math.ceil($(".student-list li").size()/3);
 pageLinkCreate(studentPerPage);
-activePage(".student-item");
+refreshPage(".student-item");
 pageClick(".student-item");
 
 $(".page-header input").keyup(function(){
@@ -57,7 +57,7 @@ $(".page-header input").keyup(function(){
   };
   studentPerPage = Math.ceil(totalResult/3)
   pageLinkCreate(studentPerPage);
-  activePage($(".student-item:visible"));
+  refreshPage($(".student-item:visible"));
   pageClick($(".student-item:visible"));
 })
 
