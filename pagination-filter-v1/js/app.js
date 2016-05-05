@@ -1,17 +1,17 @@
-//Create the Search field
+//Add an HTML Search field
 $(".page-header").append("<div class=\"student-search\">  <input placeholder=\"Search for students...\">  <button>Search</button></div>");
-
+//Add an HTML div for animation
+$(".page").append("<div id=\"anim\"></div>")
 //Function1: create page links based on number of students
 function createPageLink(currentList){
-    totalPage = Math.ceil($(currentList).size()/10);
+    var totalPage = Math.ceil($(currentList).size()/10);
     $(".pagination").remove();
-    var pageLink = "<div class=\"pagination\"><ul>"
-            + "<li><a class=\"active\" href=\"#\">1</a></li>";
-    for (i=2; i<=totalPage; i++) {
-      pageLink += "<li><a href=\"#\">"+ i +"</a></li>"; };
+    var pageLink = "<div class=\"pagination\"><ul>" + "<li><a class=\"active\" href=\"#\">1</a></li>";
+    for (var i=2; i<=totalPage; i++) {
+      pageLink += "<li><a href=\"#\">"+ i +"</a></li>"; }
     pageLink += "</ul></div>";
     $(".page").append(pageLink);//Add page links to index.html
-};
+}
 //Function2: loading based on active page, currentList, numberPerPage
 function loadItem(currentList){
   var x = $(".active").text();
@@ -19,29 +19,35 @@ function loadItem(currentList){
   var end = x * 10;// where detected currentList ends
   $(".student-item").hide();
   $(currentList).slice(start,end).show();//display 10
-};
+}
 //Function3: Update CSS when click on certain page link
 function pageClick(currentList){
   $( ".pagination a" ).click(function(){
     $( ".active" ).removeClass("active");//switch active class for CSS update
     $( this ).addClass("active");
-    loadItem(currentList); //reload item after every click
+    /***Animation within 1500ms***/
+    var target = document.getElementById('anim');
+    var spinner = new Spinner(opts).spin(target);//create a new spinner
+    setTimeout(function() {
+          spinner.stop();
+          loadItem(currentList);
+      }, 1200);//spinner will stop and the list will load after click and 1200ms
   });
 }
 //Function4: Search item and add class "found"
 function searchItem(keyWord){
   $(".found").toggleClass("found", false);
   return   $(".student-details:contains("+keyWord+")").parent().addClass("found");
-};
+}
 //LOAD DEFAULT PAGE // when load page, create page link and load all students
-createPageLink(".student-item" );
-loadItem(".student-item" );
-pageClick(".student-item" );
+createPageLink(".student-item");
+loadItem(".student-item");
+pageClick(".student-item");
 
 //LOAD SEARCHING PAGE
 $("input").keyup(function(){
-  keyWord = $("input").val(); //detect input keyword
-  if (keyWord != ""){ //if keyword is not blank
+  var keyWord = $("input").val(); //detect input keyword
+  if (keyWord !== ""){ //if keyword is not blank
     var match = searchItem(keyWord); //start searching
     if (match.size() > 0) { //if found one or more matches
       $(".unmatchMessage").remove();//remove any existed message
@@ -51,8 +57,8 @@ $("input").keyup(function(){
     } else {//If found no match
       $(".student-item").hide(); //Hide all students
       $(".pagination").remove();//Remove the pagination
-      $(".unmatchMessage").remove() //Remove any existed message whenever keyup. This will avoid create multiple <div> for unmatch message if users type several unmatch keyword such as "1111111111"
-      var noMatch = "<div class=\"unmatchMessage\">There is no match</div>";
+      $(".unmatchMessage").remove(); //Remove any existed message whenever keyup. This will avoid create multiple <div> for unmatch message if users type several unmatch keyword such as "1111111111"
+      var noMatch = "<div class=\"unmatchMessage\">Sorry, there is no match.</div>";
       $(".page").append(noMatch);
     }
   } else {//If the keyword is blank when key up (this usually happens when users type some keyword and backspace the whole keyword)
@@ -61,6 +67,4 @@ $("input").keyup(function(){
     loadItem(".student-item");
     pageClick(".student-item");
   }
-})
-
-//X-credit: Include simple animations when transitioning between pages.
+});
