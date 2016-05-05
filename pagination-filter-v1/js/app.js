@@ -17,27 +17,32 @@ function loadItem(currentList){
   var x = $(".active").text();
   var start = x * 10 - 10; //where detected currentList starts
   var end = x * 10;// where detected currentList ends
-  $(".student-item").hide();
-  $(currentList).slice(start,end).show();//display 10
+  if ($(currentList).size() > 7) { //if the searching list more than 7 results, apply this animation
+    /***Animation for 1000ms***/
+    var target = document.getElementById('anim');
+    var spinner = new Spinner(opts).spin(target);//create a new spinner
+    setTimeout(function() {//spinner will stop and the list will load after 1000ms
+          spinner.stop();
+          $(".student-item").hide();
+          $(currentList).slice(start,end).show();//display 10
+      }, 1000);
+  } else { //otherwise, quickly loading the list
+    $(".student-item").hide();
+    $(currentList).slice(start,end).show();//display 10
+  }
 }
 //Function3: Update CSS when click on certain page link
 function pageClick(currentList){
   $( ".pagination a" ).click(function(){
     $( ".active" ).removeClass("active");//switch active class for CSS update
     $( this ).addClass("active");
-    /***Animation within 1500ms***/
-    var target = document.getElementById('anim');
-    var spinner = new Spinner(opts).spin(target);//create a new spinner
-    setTimeout(function() {
-          spinner.stop();
-          loadItem(currentList);
-      }, 1200);//spinner will stop and the list will load after click and 1200ms
+    loadItem(currentList);//reload the list based on clicked page
   });
 }
 //Function4: Search item and add class "found"
 function searchItem(keyWord){
   $(".found").toggleClass("found", false);
-  return   $(".student-details:contains("+keyWord+")").parent().addClass("found");
+  return $(".student-details:contains("+keyWord+")").parent().addClass("found");
 }
 //LOAD DEFAULT PAGE // when load page, create page link and load all students
 createPageLink(".student-item");
