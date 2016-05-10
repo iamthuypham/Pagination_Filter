@@ -33,15 +33,15 @@ function loadItem(currentList){
 }
 //Function3: Update CSS when click on certain page link
 function pageClick(currentList){
-  $( ".pagination a" ).click(function(){
-    $( ".active" ).removeClass("active");//switch active class for CSS update
-    $( this ).addClass("active");
+  $( ".pagination" ).on("click","li",function(){
+    $( this ).siblings().children().removeClass("active");//switch active class for CSS update
+    $( this ).children().addClass("active");
     loadItem(currentList);//reload the list based on clicked page
   });
 }
 //Function4: Search item and add class "found"
 function searchItem(keyWord){
-  $(".found").toggleClass("found", false);
+  $(".found").removeClass("found");
   return $(".student-details:contains("+keyWord+")").parent().addClass("found");
 }
 //LOAD DEFAULT PAGE // when load page, create page link and load all students
@@ -49,27 +49,34 @@ createPageLink(".student-item");
 loadItem(".student-item");
 pageClick(".student-item");
 
+
 //LOAD SEARCHING PAGE
-$("input").keyup(function(){
-  var keyWord = $("input").val(); //detect input keyword
-  if (keyWord !== ""){ //if keyword is not blank
-    var match = searchItem(keyWord); //start searching
-    if (match.size() > 0) { //if found one or more matches
-      $(".unmatchMessage").remove();//remove any existed message
-      createPageLink(".found"); //create page link and load only students that found from searching
-      loadItem(".found");
-      pageClick(".found");
-    } else {//If found no match
-      $(".student-item").hide(); //Hide all students
-      $(".pagination").remove();//Remove the pagination
-      $(".unmatchMessage").remove(); //Remove any existed message whenever keyup. This will avoid create multiple <div> for unmatch message if users type several unmatch keyword such as "1111111111"
-      var noMatch = "<div class=\"unmatchMessage\">Sorry, there is no match.</div>";
-      $(".page").append(noMatch);
-    }
-  } else {//If the keyword is blank when key up (this usually happens when users type some keyword and backspace the whole keyword)
-    $(".unmatchMessage").remove(); //remove any existed message
-    createPageLink(".student-item");//create page link and load all students
-    loadItem(".student-item");
-    pageClick(".student-item");
+var oldKeyword = ""; //Used for preventing unprintable value such as Arrow, Shift
+$("input").keyup(function(event){
+  var newKeyword = $("input").val(); //detect current keyword after key up
+  //when user press key which produces UNPRINTABLE value, the input value will stay the same
+  //if users press key which produces PRINTABLE value  (the new input will different from previous input)
+  if (oldKeyword !== newKeyword){
+    if (newKeyword !== ""){ //if keyword is not blank
+      var match = searchItem(newKeyword); //start searching
+      if (match.size() > 0) { //if found one or more matches
+        $(".unmatchMessage").remove();//remove any existed message
+        createPageLink(".found"); //create page link and load only students that found from searching
+        loadItem(".found");
+        pageClick(".found");
+      } else {//If found no match
+        $(".student-item").hide(); //Hide all students
+        $(".pagination").remove();//Remove the pagination
+        $(".unmatchMessage").remove(); //Remove any existed message whenever keyup. This will avoid create multiple <div> for unmatch message if users type several unmatch keyword such as "1111111111"
+        var noMatch = "<div class=\"unmatchMessage\">Sorry, there is no match.</div>";
+        $(".page").append(noMatch);
+      }
+    } else {//If the keyword is blank when key up (this usually happens when users type some keyword and backspace the whole keyword)
+      $(".unmatchMessage").remove(); //remove any existed message
+      createPageLink(".student-item");//create page link and load all students
+      loadItem(".student-item");
+      pageClick(".student-item");
+    };
+    oldKeyword = newKeyword;//set current input to become previous input so it is ready for next keyup
   }
 });
