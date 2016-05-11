@@ -1,7 +1,7 @@
 //Add an HTML Search field
 $(".page-header").append("<div class=\"student-search\">  <input placeholder=\"Search for students...\">  <button>Search</button></div>");
 //Add an HTML div for animation
-$(".page").append("<div id=\"anim\"></div>")
+$(".page").append("<div id=\"anim\"></div>");
 //Function1: create page links based on number of students
 function createPageLink(currentList){
     var totalPage = Math.ceil($(currentList).size()/10);
@@ -48,8 +48,6 @@ function searchItem(keyWord){
 createPageLink(".student-item");
 loadItem(".student-item");
 pageClick(".student-item");
-
-
 //LOAD SEARCHING PAGE
 var oldKeyword = ""; //Used for preventing unprintable value such as Arrow, Shift
 $("input").keyup(function(event){
@@ -76,7 +74,7 @@ $("input").keyup(function(event){
       createPageLink(".student-item");//create page link and load all students
       loadItem(".student-item");
       pageClick(".student-item");
-    };
+    }
     oldKeyword = newKeyword;//set current input to become previous input so it is ready for next keyup
   }
 });
