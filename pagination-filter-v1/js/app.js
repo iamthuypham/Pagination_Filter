@@ -51,7 +51,7 @@ pageClick(".student-item");
 //LOAD SEARCHING PAGE
 var oldKeyword = ""; //Used for preventing unprintable value such as Arrow, Shift
 $("input").keyup(function(event){
-  var newKeyword = $("input").val(); //detect current keyword after key up
+  var newKeyword = $("input").val().toLowerCase(); //detect current keyword after key up
   //when user press key which produces UNPRINTABLE value, the input value will stay the same
   //if users press key which produces PRINTABLE value  (the new input will different from previous input)
   if (oldKeyword !== newKeyword){
